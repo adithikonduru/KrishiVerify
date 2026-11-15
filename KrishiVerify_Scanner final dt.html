@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <title>KrishiVerify</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+            --bg: #F2F4F0;
+            --sf: #fff;
+            --sf2: #E7ECE5;
+            --fg: #17231D;
+            --mu: #506157;
+            --ln: #7F9285;
+            --ac: #1D4B7A;
+            --acf: #fff;
+            --ok: #17683F;
+            --okb: #DCF0E3;
+            --wn: #7D5200;
+            --wnb: #FAEBC2;
+            --bd: #9B2424;
+            --bdb: #F7DAD8;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        @media(prefers-color-scheme:dark) {
+            :root:not([data-theme=light]) {
+                --bg: #0E1612;
+                --sf: #16201A;
+                --sf2: #1E2B23;
+                --fg: #E5EDE7;
+                --mu: #9AAAA0;
+                --ln: #607367;
+                --ac: #86B6EA;
+                --acf: #0A1826;
+                --ok: #62CF8F;
+                --okb: #143020;
+                --wn: #E6B64D;
+                --wnb: #35290E;
+                --bd: #F28F8A;
+                --bdb: #3B1B1A
+            }
+        }
+
+        html {
+            scroll-padding-top: env(safe-area-inset-top, 0px)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font: 16px/1.5 system-ui, -apple-system, "Segoe UI", "Noto Sans Devanagari", "Noto Sans Telugu", sans-serif;
+            overflow-wrap: anywhere;
+            word-break: break-word
+        }
+
+        .w {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 max(16px, env(safe-area-inset-left, 0px)) 0 max(16px, env(safe-area-inset-right, 0px))
+        }
+
+        header {
+            padding: 20px 0 8px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.7rem
+        }
+
+        h2 {
+            font-size: 1.15rem;
+            margin: 0 0 8px
+        }
+
+        p {
+            margin: 0 0 8px
+        }
+
+        .mu {
+            color: var(--mu);
+            font-size: .9rem
+        }
+
+        nav {
+            display: flex;
+            gap: 6px;
+            margin: 14px 0;
+            flex-wrap: wrap
+        }
+
+        nav button,
+        .b {
+            font: inherit;
+            border: 1px solid var(--ln);
+            background: var(--sf2);
+            color: var(--fg);
+            padding: 9px 14px;
+            border-radius: 8px;
+            cursor: pointer
+        }
+
+        nav button:focus-visible,
+        .b:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid var(--ac);
+            outline-offset: 2px
+        }
+
+        nav button[aria-selected="true"],
+        .b.p {
+            background: var(--ac);
+            color: var(--acf);
+            border-color: var(--ac)
+        }
+
+        .c {
+            background: var(--sf);
+            border: 1px solid var(--ln);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px
+        }
+
+        .g {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px
+        }
+
+        label {
+            display: block;
+            font-size: .85rem;
+            color: var(--mu);
+            margin-bottom: 2px
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            font: inherit;
+            padding: 8px;
+            border: 1px solid var(--ln);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--fg)
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--mu);
+            opacity: 1
+        }
+
+        textarea {
+            font-family: ui-monospace, monospace;
+            font-size: .8rem;
+            min-height: 70px;
+            resize: vertical
+        }
+
+        video,
+        #cv {
+            width: 100%;
+            max-height: 480px;
+            border-radius: 10px;
+            background: #000;
+            object-fit: contain
+        }
+
+        #cv {
+            display: none
+        }
+
+        .res {
+            border-radius: 12px;
+            padding: 16px;
+            border: 2px solid var(--ln)
+        }
+
+        .res.ok {
+            background: var(--okb);
+            border-color: var(--ok)
+        }
+
+        .res.wn {
+            background: var(--wnb);
+            border-color: var(--wn)
+        }
+
+        .res.bd {
+            background: var(--bdb);
+            border-color: var(--bd)
+        }
+
+        .big {
+            font-size: 1.5rem;
+            font-weight: 700
+        }
+
+        .res.ok .big {
+            color: var(--ok)
+        }
+
+        .res.wn .big {
+            color: var(--wn)
+        }
+
+        .res.bd .big {
+            color: var(--bd)
+        }
+
+        ul {
+            margin: 8px 0 0;
+            padding-left: 20px
+        }
+
+        [hidden] {
+            display: none !important
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        .qrs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 10px
+        }
+
+        .qc {
+            border: 1px solid var(--ln);
+            border-radius: 8px;
+            padding: 8px;
+            background: #fff;
+            color: #000;
+            text-align: center;
+            font-size: .8rem;
+            break-inside: avoid;
+            page-break-inside: avoid
+        }
+
+        .qc svg {
+            width: 100%;
+            height: auto
+        }
+
+        code {
+            font-family: ui-monospace, monospace;
+            font-size: .85em
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0
+        }
+
+        .upload-btn {
+            display: inline-block;
+            margin: 0;
+            cursor: pointer
+        }
+
+        .upload-btn:focus-within {
+            outline: 2px solid var(--ac);
+            outline-offset: 2px
+        }
+
+        @media print {
+            header,
+            nav,
+            #tabs,
+            #camMsg,
+            .row,
+            details,
+            .c:not(#qrs-wrap),
+            #mkmsg,
+            #mkpubout,
+            #out {
+                display: none !important
+            }
+
+            body,
+            .w {
+                background: #fff !important;
+                color: #000 !important;
+                padding: 0 !important;
+                max-width: 100% !important
+            }
+
+            #issue {
+                display: block !important
+            }
+
+            #qrs {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 12px
+            }
+
+            .qc {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border: 1px solid #ccc
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="w">
+        <header>
+            <h1><span aria-hidden="true">🌾 </span>KrishiVerify</h1>
+            <p class="mu">Scan the QR on a fertiliser or pesticide pack. Check that the code was issued by a registered
+                manufacturer, then see whether it suits your soil. It cannot test what is inside the bag; only a lab
+                can.</p>
+        </header>
+
+        <nav id="tabs" role="tablist" aria-label="Main Navigation">
+            <button id="tab-scan" role="tab" aria-selected="true" aria-controls="scan" data-t="scan">Scan a pack</button>
+            <button id="tab-issue" role="tab" aria-selected="false" aria-controls="issue" data-t="issue">Issue pack QRs</button>
+            <button id="tab-reg" role="tab" aria-selected="false" aria-controls="reg" data-t="reg">Registry</button>
+            <button id="tab-about" role="tab" aria-selected="false" aria-controls="about" data-t="about">How it works</button>
+        </nav>
+
+        <main>
+            <section id="scan" role="tabpanel" aria-labelledby="tab-scan">
+                <div class="c">
+                    <h2>1. Scan</h2>
+                    <video id="vid" playsinline muted hidden></video><canvas id="cv"></canvas>
+                    <div class="row">
+                        <button class="b p" id="cam" type="button">Start camera</button>
+                        <button class="b" id="stop" type="button" hidden>Stop</button>
+                        <label class="b upload-btn">Upload photo<input type="file" id="file" class="sr-only" accept="image/*"></label>
+                    </div>
+                    <p class="mu" id="camMsg" role="status" aria-live="polite" style="margin-top:8px">If the camera is blocked here, use Upload photo or paste the code below.</p>
+                    <label for="qr" style="margin-top:8px">Code read from the pack</label>
+                    <textarea id="qr" placeholder="Scanned code appears here, or paste it"></textarea>
+                </div>
+
+                <div class="c">
+                    <h2>2. What you can see on the bag</h2>
+                    <div class="g">
+                        <div><label for="scr">Scratch code (under the panel)</label><input id="scr" autocomplete="off" placeholder="leave empty if none"></div>
+                        <div><label for="seal">Seal</label><select id="seal">
+                                <option value="unknown">Not checked</option>
+                                <option value="intact">Intact</option>
+                                <option value="broken">Broken or reglued</option>
+                            </select></div>
+                        <div><label for="pn">Product name on the bag (optional)</label><input id="pn" autocomplete="off" placeholder="e.g. Urea, DAP, a pesticide name"></div>
+                        <div><label for="lang">Result language</label><select id="lang">
+                                <option value="en">English</option>
+                                <option value="hi">हिन्दी</option>
+                                <option value="te">తెలుగు</option>
+                            </select></div>
+                    </div>
+                </div>
+
+                <details class="c" id="soilBox">
+                    <summary><b>3. Optional: your soil (from a soil test report)</b></summary>
+                    <div class="g" style="margin-top:10px">
+                        <div><label for="ph">Soil pH (4.5 to 8.5)</label><input id="ph" type="number" step="0.1" min="4.5" max="8.5" inputmode="decimal"></div>
+                        <div><label for="n">Nitrogen level (20 to 160)</label><input id="n" type="number" min="20" max="160" inputmode="decimal"></div>
+                        <div><label for="pp">Phosphorus level (10 to 90)</label><input id="pp" type="number" min="10" max="90" inputmode="decimal"></div>
+                        <div><label for="k">Potassium level (10 to 120)</label><input id="k" type="number" min="10" max="120" inputmode="decimal"></div>
+                    </div>
+                    <p class="mu" style="margin-top:8px">Skip this if you have no soil report; the pack check still works. Fill all four values to also see if a fertiliser suits your soil. Pesticide suitability depends on your pest and crop, which this tool has no data for.</p>
+                </details>
+
+                <details class="c">
+                    <summary><b>4. Optional: where did you buy it?</b></summary>
+                    <div class="g" style="margin-top:10px">
+                        <div><label for="sr">Seller rating (1 to 5)</label><input id="sr" type="number" min="1" max="5" step="0.1"></div>
+                        <div><label for="sv">Number of seller reviews</label><input id="sv" type="number" min="0"></div>
+                        <div><label for="se">Spelling mistakes in the listing</label><input id="se" type="number" min="0"></div>
+                        <div><label for="sc">Seller contact details complete?</label><select id="sc">
+                                <option value="">Unknown</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select></div>
+                        <div><label for="sp">Return policy clear?</label><select id="sp">
+                                <option value="">Unknown</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select></div>
+                        <div><label for="sb">Brand name looks copied or misspelt?</label><select id="sb">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select></div>
+                    </div>
+                </details>
+
+                <div class="row" style="margin:0 0 14px"><button class="b p" id="chk" type="button">Check this pack</button></div>
+                <div id="out" role="status" aria-live="polite"></div>
+            </section>
+
+            <section id="issue" role="tabpanel" aria-labelledby="tab-issue" hidden>
+                <div class="c" id="qrs-wrap">
+                    <h2>Issue signed pack QRs (manufacturer or pilot use)</h2>
+                    <p class="mu">This creates a manufacturer key on this device and signs each pack. Phones trust a manufacturer only after the registry authority approves it: press "Show my public key" and send it to the authority. The approval is signed by the authority, so nobody else can add a manufacturer.</p>
+                    <div class="g">
+                        <div><label for="mid">Manufacturer ID</label><input id="mid" value="MFR-01"></div>
+                        <div><label for="mname">Manufacturer name</label><input id="mname" value="My Agro Company"></div>
+                        <div><label for="ptype">Product</label><select id="ptype"></select></div>
+                        <div><label for="pname">Pesticide name (if pesticide)</label><input id="pname" placeholder="e.g. Chlorpyrifos 20% EC"></div>
+                        <div><label for="bt">Batch</label><input id="bt" value="B001"></div>
+                        <div><label for="s0">First serial</label><input id="s0" type="number" value="1"></div>
+                        <div><label for="cnt">How many packs (1 to 12)</label><input id="cnt" type="number" value="4" min="1" max="12"></div>
+                        <div><label for="ex">Expiry date</label><input id="ex" type="date"></div>
+                    </div>
+                    <div class="row"><button class="b p" id="mk" type="button">Create signed QRs</button><button class="b" id="mkpub" type="button">Show my public key</button><button class="b" type="button" onclick="window.print()">Print</button></div>
+                    <p class="mu" id="mkmsg" role="status" aria-live="polite" style="margin-top:8px"></p>
+                    <textarea id="mkpubout" readonly hidden></textarea>
+                </div>
+                <div class="qrs" id="qrs"></div>
+            </section>
+
+            <section id="reg" role="tabpanel" aria-labelledby="tab-reg" hidden>
+                <div class="c">
+                    <h2>Trusted manufacturers and recalls</h2>
+                    <p class="mu">Only the registry authority (the main person) can change this list. Every update is signed with the authority's private key. This device accepts an update only if the signature matches the authority it trusts, so an edited copy is rejected.</p>
+                    <p id="regst" role="status"></p>
+                    <ul id="mflist"></ul>
+                    <label for="regj" style="margin-top:12px">Signed registry. Copy it to another phone, or paste an update from the authority here and press Load.</label>
+                    <textarea id="regj" style="min-height:120px"></textarea>
+                    <label for="regf" style="margin-top:12px">Official product register (CSV with a header row; columns like product, manufacturer, reg_no, batch, status)</label>
+                    <input type="file" id="regf" accept=".csv,text/csv">
+                    <div class="row">
+                        <button class="b p" id="regl" type="button">Load signed registry</button>
+                        <button class="b" id="regx" type="button">Clear scan history</button>
+                    </div>
+                    <p class="mu" id="regm"></p>
+                </div>
+
+                <details class="c" id="admin">
+                    <summary><b>Authority tools (main person only)</b></summary>
+                    <p class="mu" style="margin-top:10px">Changes are signed with the authority's private key. The key is not stored on this device: you paste it each session and it is forgotten when the page closes.</p>
+                    <div class="row"><button class="b" id="akey" type="button">Create authority key (first time only)</button></div>
+                    <div id="asecbox" class="c" style="margin-top:10px" hidden>
+                        <label for="aseco"><b>Your authority private key. Save it now (password manager or paper). It is shown only once and cannot be recovered.</b></label>
+                        <textarea id="aseco" readonly></textarea>
+                        <div class="row"><button class="b" id="asecdone" type="button">I have saved it, hide it</button></div>
+                    </div>
+                    <div id="aopen" style="margin-top:10px">
+                        <label for="asec">Authority private key</label>
+                        <input id="asec" type="password" autocomplete="off" placeholder="paste to unlock for this session">
+                        <div class="row"><button class="b p" id="aunlock" type="button">Unlock</button></div>
+                    </div>
+                    <div id="atools" hidden>
+                        <h2 style="margin-top:14px">Approve a manufacturer</h2>
+                        <div class="g">
+                            <div><label for="aid">Manufacturer ID</label><input id="aid" autocomplete="off" placeholder="e.g. MFR-01"></div>
+                            <div><label for="aname">Manufacturer name</label><input id="aname" autocomplete="off"></div>
+                            <div><label for="apub">Public key (from the manufacturer)</label><input id="apub" autocomplete="off" placeholder="64 characters"></div>
+                        </div>
+                        <div class="row"><button class="b p" id="aadd" type="button">Approve and sign</button></div>
+                        <h2 style="margin-top:14px">Revoke a manufacturer</h2>
+                        <div class="g"><div><label for="rid">Manufacturer ID</label><input id="rid" autocomplete="off"></div></div>
+                        <div class="row"><button class="b" id="arev" type="button">Revoke and sign</button></div>
+                        <h2 style="margin-top:14px">Recall a batch</h2>
+                        <div class="g"><div><label for="rb">MANUFACTURERID:BATCH</label><input id="rb" autocomplete="off" placeholder="e.g. MFR-01:B001"></div></div>
+                        <div class="row"><button class="b" id="arec" type="button">Recall and sign</button><button class="b" id="alock" type="button">Lock</button></div>
+                    </div>
+                    <p class="mu" id="astat" role="status" aria-live="polite" style="margin-top:8px"></p>
+                </details>
+            </section>
+
+            <section id="about" role="tabpanel" aria-labelledby="tab-about" hidden>
+                <div class="c">
+                    <h2>How a check works</h2>
+                    <ul>
+                        <li><b>Signature:</b> each QR carries the pack details plus an Ed25519 signature. A forged or edited code fails, with or without internet.</li>
+                        <li><b>Registry, recall, expiry:</b> the manufacturer must be on the registry, the batch not recalled, the date not passed. The registry is signed by one authority (the main person); a device accepts changes only if the signature matches the authority it trusts.</li>
+                        <li><b>Scratch code and seal:</b> a copied QR does not carry the secret under the scratch panel. A broken seal adds risk.</li>
+                        <li><b>Scan history:</b> the same pack scanned many times on this device adds a clone warning.</li>
+                        <li><b>Seller risk (optional):</b> a logistic model trained on <code>counterfeit_products_clean.csv</code> scores the listing. Treat it as a weak hint: the dataset is about online sellers and separates classes almost perfectly, so real accuracy will be lower.</li>
+                        <li><b>Suitability:</b> a decision tree trained on <code>fertilizer_recommendation_clean.csv</code> (10,000 rows, about 88% cross-validated accuracy) predicts the fertiliser your pH, N, P and K suggest. The dataset shows no crop effect, so crop is not asked.</li>
+                    </ul>
+                    <p class="mu">Limits: a valid result means "consistent with manufacturer records", not "authentic or safe". The scratch code is stored hashed inside the signed QR, so a determined attacker holding a QR could try to guess it; a server-side check (see the notebook) removes that. Scan history here is per device. Only manufacturers who adopt the system can be verified. Any other QR or barcode is matched against the product register you load (if any) and otherwise gets a basic safety read (link red flags, barcode check digit, GS1 batch and expiry) but is never shown as verified.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tweetnacl@1.0.3/nacl-fast.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+    <script>
+        const $ = i => document.getElementById(i),
+            TREE = { "cls": ["Compost", "DAP", "MOP", "NPK", "SSP", "Urea", "Zinc Sulphate"], "nodes": [[1, 59.5, 1, 2, 5], [-1, -2.0, -1, -1, 5], [2, 39.5, 3, 4, 1], [-1, -2.0, -1, -1, 1], [3, 39.5, 5, 6, 2], [-1, -2.0, -1, -1, 2], [0, 5.49, 7, 8, 0], [-1, -2.0, -1, -1, 0], [0, 7.81, 9, 10, 6], [-1, -2.0, -1, -1, 3], [-1, -2.0, -1, -1, 6]] },
+            LG = { "f": ["seller_rating", "spelling_errors", "contact_info_complete", "return_policy_clear", "certification_badges", "brand_is_spoofed", "seller_reviews"], "mu": [3.733, 1.0934, 0.7236, 0.693, 2.0264, 0.2162, 3529.8092], "sd": [0.9952, 1.1606, 0.4472, 0.4612, 1.4053, 0.4117, 3281.0908], "w": [-3.4325, 3.0668, -0.918, -0.3484, -0.1729, 2.113, -4.4729], "b": -4.0907 };
+        const FERT = TREE.cls;
+        const mem = {};
+        const st = {
+            get(k) { try { return JSON.parse(localStorage.getItem(k)) } catch (e) { return mem[k] ?? null } },
+            set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)) } catch (e) { mem[k] = v } }
+        };
+        const has = (o, k) => Boolean(o) && Object.prototype.hasOwnProperty.call(o, k);
+        const b64e = u => btoa(String.fromCharCode(...u)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        const b64d = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - s.length % 4) % 4)), c => c.charCodeAt(0));
+        const hex = u => [...u].map(x => x.toString(16).padStart(2, '0')).join('');
+        const unhex = h => Uint8Array.from((h || '').match(/../g) || [], x => parseInt(x, 16));
+        const enc = s => new TextEncoder().encode(s);
+        const sh = (unit, sc) => hex(nacl.hash(enc(unit + '|' + sc.trim().toUpperCase()))).slice(0, 20);
+        function localISODate(d = new Date()) { return new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, 10) }
+
+        let KEYS = st.get('kv_keys') || {}, HIST = st.get('kv_hist') || {};
+
+        /* registry: one authority signs it; this device accepts only signed updates */
+        const AUTH_PUB_BUILTIN = ''; // optional: paste the authority's public key (64 characters) here to lock this copy of the app to one authority
+        let AUTH = AUTH_PUB_BUILTIN || st.get('kv_auth') || '';
+        let REG = { seq: 0, mf: {}, recalled: [] }, BUNDLE = '', SECRET = null;
+        const HEX64 = /^[0-9a-f]{64}$/;
+        const fp = h => hex(nacl.hash(unhex(h))).slice(0, 16).toUpperCase().replace(/(.{4})(?=.)/g, '$1 ');
+        function cleanReg(j) {
+            const mf = {};
+            Object.keys(j.mf).forEach(id => {
+                const m = j.mf[id];
+                if (id !== '__proto__' && /^[A-Za-z0-9_-]{1,32}$/.test(id) && m && HEX64.test(m.pub || '')) mf[id] = { name: String(m.name || id).slice(0, 80), pub: m.pub, revoked: !!m.revoked };
+            });
+            return { seq: j.seq, mf, recalled: j.recalled.filter(x => typeof x === 'string').slice(0, 5000) };
+        }
+        function parseBundle(text) {
+            const parts = String(text || '').trim().split('.');
+            if (parts.length !== 2) throw new Error('That is not a signed registry.');
+            const pb = b64d(parts[0]), sig = b64d(parts[1]), j = JSON.parse(new TextDecoder().decode(pb));
+            if (!j || j.v !== 1 || !Number.isInteger(j.seq) || j.seq < 0 || !HEX64.test(j.auth || '') || !j.mf || typeof j.mf !== 'object' || Array.isArray(j.mf) || !Array.isArray(j.recalled)) throw new Error('That is not a valid registry.');
+            return { j, pb, sig };
+        }
+        const sigGood = (b, pub) => { try { return b.sig.length === 64 && nacl.sign.detached.verify(b.pb, b.sig, unhex(pub)) } catch (e) { return false } };
+        function loadBundle(text) {
+            let b; try { b = parseBundle(text) } catch (e) { return { ok: false, msg: 'That is not a signed registry.' } }
+            if (AUTH && b.j.auth !== AUTH) return { ok: false, msg: 'Rejected: this registry was signed by a different authority than the one this device trusts.' };
+            if (!sigGood(b, b.j.auth)) return { ok: false, msg: 'Rejected: the signature is not valid. The registry was edited or was not signed by the authority.' };
+            if (b.j.seq < REG.seq) return { ok: false, msg: 'Rejected: this registry (version ' + b.j.seq + ') is older than the one on this device (version ' + REG.seq + '). An old copy could hide a recall.' };
+            if (!AUTH) {
+                if (!confirm('This device does not trust any authority yet.\n\nTrust the authority with this fingerprint?\n' + fp(b.j.auth) + '\n\nOnly continue if the main person gave you the same fingerprint.')) return { ok: false, msg: 'Cancelled. Nothing was changed.' };
+                AUTH = b.j.auth; st.set('kv_auth', AUTH);
+            }
+            REG = cleanReg(b.j); BUNDLE = String(text).trim(); st.set('kv_sreg', BUNDLE);
+            return { ok: true, msg: 'Signed registry loaded: version ' + REG.seq + '.' };
+        }
+        (function () {
+            const saved = st.get('kv_sreg');
+            if (!saved || !AUTH) return;
+            try { const b = parseBundle(saved); if (b.j.auth === AUTH && sigGood(b, AUTH)) { REG = cleanReg(b.j); BUNDLE = saved } } catch (e) { }
+        })();
+
+        /* tabs */
+        const tabButtons = document.querySelectorAll('#tabs button');
+        tabButtons.forEach(b => b.onclick = () => {
+            stopCam();
+            tabButtons.forEach(x => x.setAttribute('aria-selected', x === b));
+            ['scan', 'issue', 'reg', 'about'].forEach(t => { const s = $(t); if (s) { s.hidden = t !== b.dataset.t } });
+            const target = $(b.dataset.t); if (target && target.focus) target.focus();
+        });
+
+        /* camera + decode */
+        let stream = null, raf = 0, isStarting = false, frameCount = 0;
+        const vid = $('vid'), cv = $('cv'), cx = cv.getContext('2d', { willReadFrequently: true });
+        function got(t) {
+            $('qr').value = t;
+            $('camMsg').textContent = 'Code read. Fill in what you see on the bag, then press Check this pack.';
+            stopCam();
+        }
+        function stopCam() {
+            cancelAnimationFrame(raf);
+            raf = 0;
+            isStarting = false;
+            if (stream) {
+                stream.getTracks().forEach(t => t.stop());
+                stream = null;
+            }
+            vid.srcObject = null;
+            vid.hidden = true;
+            $('stop').hidden = true;
+            $('cam').hidden = false;
+            $('cam').disabled = false;
+        }
+        function tick() {
+            if (!stream) return;
+            if (vid.readyState >= 2 && (++frameCount % 3 === 0)) {
+                if (cv.width !== vid.videoWidth || cv.height !== vid.videoHeight) {
+                    cv.width = vid.videoWidth;
+                    cv.height = vid.videoHeight;
+                }
+                cx.drawImage(vid, 0, 0);
+                const im = cx.getImageData(0, 0, cv.width, cv.height);
+                const r = jsQR(im.data, im.width, im.height);
+                if (r && r.data) return got(r.data);
+            }
+            raf = requestAnimationFrame(tick);
+        }
+        $('cam').onclick = async () => {
+            if (isStarting || stream) return;
+            isStarting = true;
+            $('cam').disabled = true;
+            try {
+                const s = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
+                });
+                if (!isStarting) {
+                    s.getTracks().forEach(t => t.stop());
+                    return;
+                }
+                stream = s;
+                vid.srcObject = s;
+                vid.hidden = false;
+                await vid.play();
+                $('stop').hidden = false;
+                $('cam').hidden = true;
+                $('camMsg').textContent = 'Point camera at the QR code.';
+                tick();
+            } catch (e) {
+                isStarting = false;
+                $('cam').disabled = false;
+                $('camMsg').textContent = 'Camera not available (' + (e.name || 'error') + '). Upload photo or paste code.';
+            }
+        };
+        $('stop').onclick = stopCam;
+        document.addEventListener('visibilitychange', () => { if (document.hidden) stopCam(); });
+
+        $('file').onchange = e => {
+            const f = e.target.files[0]; if (!f) return;
+            const url = URL.createObjectURL(f), im = new Image();
+            im.onload = () => {
+                URL.revokeObjectURL(url);
+                const s = Math.min(1, 1400 / Math.max(im.width, im.height));
+                cv.width = im.width * s;
+                cv.height = im.height * s;
+                cx.drawImage(im, 0, 0, cv.width, cv.height);
+                const d = cx.getImageData(0, 0, cv.width, cv.height);
+                const r = jsQR(d.data, d.width, d.height);
+                r ? got(r.data) : ($('camMsg').textContent = 'No QR found in that photo. Move closer, avoid glare and blur, and try again.');
+            };
+            im.onerror = () => {
+                URL.revokeObjectURL(url);
+                $('camMsg').textContent = 'Could not read or decode that image file. Please try another image.';
+            };
+            im.src = url;
+            e.target.value = '';
+        };
+
+        /* models */
+        function predictFert(ph, n, p, k) {
+            const x = [Math.max(4.5, Math.min(8.5, ph)), Math.max(20, Math.min(160, n)), Math.max(10, Math.min(90, p)), Math.max(10, Math.min(120, k))];
+            let i = 0; while (TREE.nodes[i][0] >= 0) { const nd = TREE.nodes[i]; i = x[nd[0]] <= nd[1] ? nd[2] : nd[3] } return FERT[TREE.nodes[i][4]];
+        }
+        function sellerRisk() {
+            const g = i => $(i).value;
+            if (g('sr') === '' && g('sv') === '' && g('se') === '' && g('sc') === '' && g('sp') === '' && g('sb') === '0') return null;
+            const v = [g('sr') === '' ? 3.7 : +g('sr'), g('se') === '' ? 1 : +g('se'), g('sc') === '' ? .72 : +g('sc'), g('sp') === '' ? .69 : +g('sp'), 2, +g('sb'), g('sv') === '' ? 3500 : +g('sv')];
+            let z = LG.b; v.forEach((a, i) => z += LG.w[i] * (a - LG.mu[i]) / LG.sd[i]); return 1 / (1 + Math.exp(-z));
+        }
+
+        /* verify */
+        let lastCheckedCode = '';
+        function verify(text, o) {
+            const R = { flags: [], risk: 0, hard: false, pack: null, steps: [] }; const S = (ok, l) => R.steps.push([ok, l]);
+            let p, pb, sig;
+            try {
+                const parts = text.trim().split('.');
+                if (parts.length !== 2) throw new Error('Invalid format');
+                pb = b64d(parts[0]); p = JSON.parse(new TextDecoder().decode(pb)); sig = b64d(parts[1]);
+                if (!p || typeof p !== 'object' || !p.m || !p.b) throw new Error('Malformed payload');
+            } catch (e) {
+                R.other = analyzeOther(text); R.verdict = 'UNVERIFIED'; return R;
+            }
+            R.pack = p;
+            const m = has(REG.mf, p.m) ? REG.mf[p.m] : null;
+            const sigOk = () => {
+                try {
+                    if (!m || !m.pub) return false;
+                    const pub = unhex(String(m.pub || ''));
+                    return pub.length === 32 && sig.length === 64 && nacl.sign.detached.verify(pb, sig, pub);
+                } catch (err) { return false }
+            };
+            if (!m) { R.hard = true; R.flags.push(BUNDLE ? 'Manufacturer ' + p.m + ' is not approved in the registry on this device.' : 'No signed registry is loaded on this device, so this manufacturer cannot be trusted. Load the authority\'s signed registry in the Registry tab.') }
+            else if (m.revoked) { R.hard = true; R.flags.push('The manufacturer\'s key was revoked.') }
+            else if (!sigOk()) { R.hard = true; R.flags.push('Signature does not match: the code was forged or edited.') }
+            else S(1, 'Signature valid for ' + (m.name || p.m));
+
+            if (REG.recalled.includes(p.m + ':' + p.b)) { R.hard = true; R.flags.push('This batch has been recalled.') }
+            const unit = p.m + ':' + p.b + ':' + p.n;
+            const todayStr = localISODate();
+            if (p.x && p.x < todayStr) { R.expired = true; R.risk += 50; R.flags.push('Expired on ' + p.x + '.') }
+            if (o.seal === 'broken') { R.risk += 35; R.flags.push('The seal is broken.') }
+
+            const rawScr = (o.scr || '').trim();
+            if (rawScr) {
+                if (p.h && sh(unit, rawScr) === p.h) { S(1, 'Scratch code matches'); R.risk -= 5 }
+                else { R.risk += 45; R.flags.push('The scratch code does not match.') }
+            } else if (p.h) S(0, 'Scratch code not entered');
+
+            if (o.bagProduct) {
+                const bp = o.bagProduct.toLowerCase();
+                const pp = (p.s || '').toLowerCase();
+                if (pp && !bp.includes(pp) && !pp.includes(bp)) {
+                    R.risk += 35; R.flags.push('Product name on bag ("' + o.bagProduct + '") does not match QR ("' + p.s + '").');
+                }
+            }
+
+            if (text !== lastCheckedCode) {
+                HIST[unit] = (HIST[unit] || 0) + 1;
+                st.set('kv_hist', HIST);
+                lastCheckedCode = text;
+            }
+            const h = HIST[unit] || 1;
+            if (h >= 8) { R.risk += 25; R.flags.push('This pack was scanned ' + h + ' times on this device.') }
+
+            if (o.sell != null) {
+                if (o.sell >= .7) { R.risk += 30; R.flags.push('Seller looks risky (' + Math.round(o.sell * 100) + '% model score).') }
+                else if (o.sell >= .4) { R.risk += 15; R.flags.push('Seller looks slightly unusual.') }
+                else S(1, 'Seller looks normal');
+            }
+            R.risk = Math.max(0, Math.min(100, R.risk));
+            R.verdict = R.hard ? 'INVALID' : R.risk >= 50 ? 'SUSPICIOUS' : R.risk >= 25 ? 'CAUTION' : 'CONSISTENT';
+            return R;
+        }
+
+        function gs1ok(d) {
+            if (!/^(\d{8}|\d{12,14})$/.test(d)) return false;
+            const a = d.split('').map(Number), c = a.pop();
+            let s = 0; a.reverse().forEach((x, i) => s += x * (i % 2 ? 1 : 3));
+            return (10 - s % 10) % 10 === c;
+        }
+
+        function analyzeOther(t) {
+            t = t.trim(); const o = { kind: 'text', flags: [], info: [] };
+            const SHORT = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'is.gd', 'cutt.ly', 'rb.gy', 'shorturl.at', 'wa.me'],
+                TLD = ['.xyz', '.top', '.click', '.shop', '.icu', '.buzz', '.live', '.work', '.vip', '.tk', '.ml', '.cf', '.gq'];
+            let u = null; try { u = new URL(t) } catch (e) { }
+            if (u && /^https?:$/.test(u.protocol)) {
+                o.kind = 'link'; const h = u.hostname.toLowerCase(); o.info.push('Web link to: ' + h);
+                if (u.protocol === 'http:') o.flags.push('Link is not encrypted (http).');
+                if (/^\d{1,3}(\.\d{1,3}){3}$/.test(h)) o.flags.push('Link goes to a raw IP address.');
+                if (SHORT.includes(h)) o.flags.push('Shortened link hides the real destination.');
+                if (h.includes('xn--')) o.flags.push('Domain uses look-alike characters.');
+                if (TLD.some(x => h.endsWith(x))) o.flags.push('Domain ending is common on scam sites.');
+                if (h.split('.').length > 4 || (h.match(/-/g) || []).length > 2) o.flags.push('Unusually long or hyphenated domain.');
+                if (u.username || u.password) o.flags.push('Link has a login part, a phishing trick.');
+                const m = u.pathname.match(/\/01\/(\d{14})(?:\/10\/([^/]+))?(?:\/17\/(\d{6}))?/);
+                if (m) {
+                    o.kind = 'gs1'; o.info.push('GS1 Digital Link, product number (GTIN) ' + m[1]);
+                    if (!gs1ok(m[1])) o.flags.push('GTIN check digit is wrong: not a valid product number.');
+                    if (m[2]) o.info.push('Batch: ' + decodeURIComponent(m[2]));
+                    if (m[3]) {
+                        const e = '20' + m[3].slice(0, 2) + '-' + m[3].slice(2, 4) + '-' + (m[3].slice(4) === '00' ? '28' : m[3].slice(4));
+                        o.info.push('Expiry: ' + e);
+                        if (e < localISODate()) { o.expired = true; o.flags.push('Expired on ' + e + '.') }
+                    }
+                }
+            } else if (/^\d{8,14}$/.test(t)) {
+                o.kind = 'barcode'; o.info.push('Number: ' + t);
+                if ([8, 12, 13, 14].includes(t.length) && !gs1ok(t)) o.flags.push('Check digit is wrong: not a valid product barcode.');
+            } else {
+                o.info.push('Plain text: ' + t.slice(0, 120));
+            }
+            return o;
+        }
+
+        const PEST = ["1-methyl cyclopropene", "2,4-d", "2,4-db", "6-benzyladenine", "abamectin", "acephate", "acequinocyl", "acetamiprid", "acetochlor", "acibenzolar", "acifluorfen", "alachlor", "aldicarb", "allyl isothiocyanate", "alpha cypermethrin", "aluminum phosphide", "amectoctradin", "ametryn", "aminopyralid", "aspergillus flavus", "asulam", "atrazine", "aureobasidium pullulans", "aviglycine", "azadirachtin", "azinphos-methyl", "azoxystrobin", "bacillus amyloliquifacien", "bacillus cereus", "bacillus firmus", "bacillus pumilis", "bacillus subtilis", "bacillus thuringiensis", "benfluralin", "benomyl", "bensulfuron", "bensulide", "bentazone", "bicyclopyrone", "bifenazate", "bifenthrin", "bispyribac", "boscalid", "bromacil", "bromoxynil", "buprofezin", "burkholderia cepacia", "burkholderia spp", "butralin", "butylate", "calcium polysulfide", "captan", "carbaryl", "carboxin", "carfentrazone-ethyl", "chenopodium ambrosioides", "chlorantraniliprole", "chlorethoxyfos", "chlorfenapyr", "chlorimuron", "chlormequat", "chloropicrin", "chlorothalonil", "chlorpropham", "chlorpyrifos", "chlorsulfuron", "chromobacterium subtsugae", "clethodim", "clodinafop", "clofentezine", "clomazone", "clopyralid", "cloransulam-methyl", "clothianidin", "coniothyrium minitans", "copper", "copper hydroxide", "copper octanoate", "copper oxychloride", "copper oxychloride s", "copper sulfate", "copper sulfate tribasic", "cryolite", "cuprous oxide", "cyanamide", "cyantraniliprole", "cyazofamid", "cyclanilide", "cycloate", "cydia pomonella", "cyflufenamid", "cyflumetofen", "cyfluthrin", "cyhalofop", "cyhalothrin-gamma", "cyhalothrin-lambda", "cymoxanil", "cypermethrin", "cyproconazole", "cyprodinil", "cyromazine", "cytokinin", "daminozide", "dazomet", "decan-1-ol", "deltamethrin", "desmedipham", "diazinon", "dicamba", "dichlobenil", "dichloropropene", "dichlorprop", "diclofop", "dicloran", "diclosulam", "dicofol", "dicrotophos", "dienochlor", "diethatyl", "difenoconazole", "diflubenzuron", "diflufenzopyr", "dimethenamid", "dimethenamid-p", "dimethoate", "dimethomorph", "dimethyl disulfide", "dinoseb", "dinotefuran", "diphenamid", "diquat", "disulfoton", "dithiopyr", "diuron", "dodine", "emamectin", "endosulfan", "endothal", "esfenvalerate", "ethalfluralin", "ethephon", "ethofumesate", "ethoprophos", "etoxazole", "etridiazole", "famoxadone", "fatty alcohols", "fenamidone", "fenamiphos", "fenarimol", "fenazaquin", "fenbuconazole", "fenbutatin oxide", "fenhexamid", "fenoxaprop", "fenoxycarb", "fenpropathrin", "fenpyroximate", "fentin", "ferbam", "fipronil", "flazasulfuron", "flonicamid", "florasulam", "fluazifop", "fluazinam", "flubendiamide", "flucarbazone", "fludioxonil", "flufenacet", "flumetralin", "flumetsulam", "flumiclorac", "flumioxazin", "fluometuron", "fluopicolide", "fluopyram", "fluoxastrobin", "flupyradifurone", "fluridone", "fluroxypyr", "fluthiacet-methyl", "flutolanil", "flutriafol", "fluvalinate tau", "fluxapyroxad", "folpet", "fomesafen", "foramsulfuron", "formetanate", "fosetyl", "gallex", "gamma aminobutyric acid", "garlic juice", "gibberellic acid", "gliocladium virens", "glufosinate", "glyphosate", "halosulfuron", "harpin protein", "hexazinone", "hexythiazox", "hydramethylnon", "hydrated lime", "hydrogen peroxide", "hymexazol", "imazalil", "imazamethabenz", "imazamox", "imazapic", "imazapyr", "imazaquin", "imazethapyr", "imazosulfuron", "imidacloprid", "indaziflam", "indoxacarb", "iodosulfuron", "ipconazole", "iprodione", "isaria fumosorosea", "isofetamid", "isoxaben", "isoxaflutole", "kaolin clay", "kasugamycin", "kinoprene", "kresoxim-methyl", "l-glutamic acid", "lactofen", "linuron", "malathion", "maleic hydrazide", "mancozeb", "mandipropamid", "maneb", "mecoprop", "mefenoxam", "mepiquat", "mesosulfuron", "mesotrione", "metalaxyl", "metaldehyde", "metam", "metam potassium", "metconazole", "methidathion", "methiocarb", "methomyl", "methoxyfenozide", "methyl bromide", "methyl parathion", "metiram", "metolachlor", "metolachlor-s", "metrafenone", "metribuzin", "metsulfuron", "mevinphos", "myclobutanil", "myrothecium verrucaria", "naled", "naphthylacetamide", "naphthylacetic acid", "napropamide", "neem oil", "nicosulfuron", "norflurazon", "nosema locustae cann", "novaluron", "orthosulfamuron", "oryzalin", "oxadiazon", "oxamyl", "oxydemeton-methyl", "oxyfluorfen", "oxytetracycline", "paclobutrazol", "paecilomyces lilacinus", "paraquat", "parathion", "pelargonic acid", "pendimethalin", "penflufen", "penoxsulam", "penthiopyrad", "permethrin", "petroleum distillate", "petroleum oil", "phenmedipham", "phorate", "phosmet", "phosphoric acid", "picloram", "picoxystrobin", "pinolene", "pinoxaden", "piperonyl butoxide", "polyhedrosis virus", "polyoxorim", "potassium bicarbonate", "potassium oleate", "primisulfuron", "prodiamine", "prohexadione", "prometon", "prometryn", "propamocarb hcl", "propanil", "propargite", "propazine", "propiconazole", "propoxur", "propoxycarbazone", "propyzamide", "prosulfuron", "prothioconazole", "pseudomonas fluorescens", "pymetrozine", "pyraclostrobin", "pyraflufen ethyl", "pyrasulfotole", "pyrethrins", "pyridaben", "pyrimethanil", "pyriproxyfen", "pyrithiobac-sodium", "pyroxasulfone", "pyroxsulam", "quinclorac", "quinoxyfen", "quintozene", "quizalofop", "resmethrin", "reynoutria sachalinensis", "rimsulfuron", "rotenone", "sabadilla", "saflufenacil", "sedaxane", "sethoxydim", "silicates", "simazine", "sodium chlorate", "spinetoram", "spinosyn", "spirodiclofen", "spiromesifen", "spirotetramat", "streptomyces lydicus", "streptomycin", "sucrose octanoate", "sulfcarbamide", "sulfentrazone", "sulfosate", "sulfosulfuron", "sulfoxaflor", "sulfur", "sulfuric acid", "tcmtb", "tebuconazole", "tebufenozide", "tebupirimphos", "tebuthiuron", "tefluthrin", "tembotrione", "terbacil", "terbufos", "tetraborohydrate", "tetraconazole", "tetrathiocarbonate", "thiabendazole", "thiacloprid", "thiamethoxam", "thidiazuron", "thiencarbazone-methyl", "thifensulfuron", "thiobencarb", "thiodicarb", "thiophanate-methyl", "thiram", "tolfenpyrad", "topramezone", "tralkoxydim", "tri-allate", "triadimefon", "triadimenol", "triasulfuron", "tribenuron methyl", "tribufos", "triclopyr", "trifloxystrobin", "trifloxysulfuron", "triflumizole", "trifluralin", "triflusulfuron", "triforine", "trinexapac", "triticonazole", "uniconazole", "vinclozolin", "zeta-cypermethrin", "zineb", "ziram", "zoxamide"];
+        const FALIAS = [[/\burea\b/, 'Urea'], [/diammonium|\bdap\b/, 'DAP'], [/muriate of potash|potassium chloride|\bmop\b/, 'MOP'], [/superphosphate|\bssp\b/, 'SSP'], [/\bnpk\b/, 'NPK'], [/\bcompost\b/, 'Compost'], [/zinc sul(ph|f)ate/, 'Zinc Sulphate']];
+        function matchProduct(h) { for (const [r, n] of FALIAS) if (r.test(h)) return { t: 'F', s: n }; const p = PEST.find(x => h.includes(x)); return p ? { t: 'P', s: p } : null }
+
+        let REGL = st.get('kv_list') || [];
+        function parseCSV(tx) {
+            const rows = []; tx.split(/\r?\n/).forEach(l => {
+                if (!l.trim()) return; const c = []; let cur = '', q = false;
+                for (const ch of l) {
+                    if (ch === '"') q = !q; else if (ch === ',' && !q) { c.push(cur); cur = '' } else cur += ch;
+                }
+                c.push(cur); rows.push(c.map(x => x.trim()));
+            });
+            const h = rows.shift().map(x => x.toLowerCase().replace(/[^a-z]/g, ''));
+            const ix = k => h.findIndex(x => x.includes(k));
+            const P = ix('product') >= 0 ? ix('product') : ix('name'), M = ix('manuf'), R = ix('reg'), B = ix('batch'), S = ix('status');
+            if (P < 0 && R < 0) throw 0;
+            return rows.map(c => ({ product: P >= 0 ? c[P] || '' : '', manufacturer: M >= 0 ? c[M] || '' : '', reg: R >= 0 ? c[R] || '' : '', batch: B >= 0 ? c[B] || '' : '', status: S >= 0 ? c[S] || 'registered' : 'registered' })).filter(r => r.product || r.reg);
+        }
+
+        function showOther2(o, txt) {
+            const hay = (txt + ' ' + ($('pn').value || '')).toLowerCase();
+            const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const hit = (h, n) => n && n.length >= 4 && new RegExp('(^|[^a-z0-9])' + esc(n.toLowerCase()) + '([^a-z0-9]|$)').test(h);
+            const c = REGL.filter(r => hit(hay, r.product) || hit(hay, r.reg));
+            const rm = c.find(r => r.batch && hit(hay, r.batch)) || c[0];
+            const bad = rm && /ban|recall|revok|withdraw|suspend/i.test(rm.status), pr = matchProduct(hay), lines = o.info.slice();
+            let dec = 'CARE', head = '! Not verified', msg = 'This pack has no KrishiVerify signature and no match in your product register, so it cannot be verified. Check the seal, batch number and bill, and ask your agriculture officer.';
+            if (rm) lines.push('Register match: ' + (rm.product || rm.reg) + (rm.manufacturer ? ' · ' + rm.manufacturer : '') + (rm.reg ? ' · reg ' + rm.reg : '') + ' · status ' + rm.status);
+            if (pr) lines.push((pr.t === 'F' ? 'Recognised fertiliser type: ' : 'Recognised pesticide ingredient: ') + pr.s + (pr.t === 'P' ? ' (US usage list, not an Indian registration)' : ''));
+            if (pr && pr.t === 'F') {
+                const v = ['ph', 'n', 'pp', 'k'].map(i => parseFloat($(i).value));
+                if (v.some(isNaN)) lines.push('Soil suitability was not checked. Add your soil values (optional) to see if this fertiliser suits your soil.');
+                else {
+                    const rec = predictFert(...v); pr.ok = rec === pr.s;
+                    lines.push(pr.ok ? 'Your soil values point to ' + rec + ', which matches this product.' : 'Your soil values point to ' + rec + ', not ' + pr.s + '. It may not be the best choice for your soil.');
+                }
+            }
+            const risky = o.flags.filter(f => !/^Expired/.test(f));
+            if (o.expired || bad || (o.kind === 'link' && risky.length >= 2)) {
+                dec = 'NO'; head = '✕ Do not use';
+                msg = bad ? 'This product is listed as ' + rm.status + ' in your register. Do not use it.' : o.expired ? 'This pack is past its expiry date. Do not use it.' : 'The code looks suspicious. Do not open the link or use the pack until you are sure it is official.';
+            } else if (rm && !risky.length && o.kind !== 'link') {
+                if (pr && pr.t === 'F' && pr.ok === false) {
+                    head = '! Use with care';
+                    msg = 'The product is in your register, but it does not match your soil values.';
+                } else {
+                    dec = 'YES'; head = '✓ Can use';
+                    msg = 'The product is in your register and nothing looks wrong. A register match does not prove this exact bag is genuine, so still check the seal and the bill.';
+                }
+            }
+            $('out').innerHTML = '<div class="res ' + ({ YES: 'ok', CARE: 'wn', NO: 'bd' })[dec] + '"><div class="big"></div><p style="margin:6px 0"></p><div class="mu">Code type: ' + o.kind + ' · register rows loaded: ' + REGL.length + '</div><ul id="fl"></ul></div>';
+            $('out').querySelector('.big').textContent = head; $('out').querySelector('p').textContent = msg;
+            lines.concat(o.flags.map(f => '⚠ ' + f)).forEach(f => { const li = document.createElement('li'); li.textContent = f; $('fl').appendChild(li) });
+            $('out').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        $('regf').onchange = e => {
+            const f = e.target.files[0]; if (!f) return;
+            const p = f.text ? f.text() : new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsText(f) });
+            p.then(tx => {
+                try {
+                    REGL = parseCSV(tx); st.set('kv_list', REGL);
+                    $('regm').textContent = 'Loaded ' + REGL.length + ' register rows.';
+                } catch (x) { $('regm').textContent = 'Could not read that file. It needs a header row with a product or registration column.' }
+            }).catch(() => {
+                $('regm').textContent = 'Could not read that file. It needs a header row with a product or registration column.';
+            });
+        };
+        $('regm').textContent = REGL.length ? REGL.length + ' register rows loaded.' : '';
+
+        /* messages */
+        const T = {
+            YES: { en: 'GREEN: You can use this. The code matches the manufacturer\'s records.', hi: 'हरा: आप इसे उपयोग कर सकते हैं। कोड निर्माता के रिकॉर्ड से मेल खाता है।', te: 'ఆకుపచ్చ: మీరు దీన్ని వాడవచ్చు. కోడ్ తయారీదారు రికార్డులతో సరిపోతోంది.' },
+            CARE: { en: 'YELLOW: Use with care. Some checks are unusual or do not suit your soil.', hi: 'पीला: सावधानी से उपयोग करें। कुछ जाँचें असामान्य हैं या आपकी मिट्टी के अनुकूल नहीं।', te: 'పసుపు: జాగ్రత్తగా వాడండి. కొన్ని తనిఖీలు అసాధారణం లేదా మీ నేలకు సరిపోవు.' },
+            NO: { en: 'RED: Do not use. This pack is invalid or suspicious. Keep the bag and report it.', hi: 'लाल: उपयोग न करें। यह पैक अमान्य या संदिग्ध है। बैग रखें और शिकायत करें।', te: 'ఎరుపు: వాడవద్దు. ఈ ప్యాక్ చెల్లనిది లేదా అనుమానాస్పదం. బ్యాగ్ ఉంచి ఫిర్యాదు చేయండి.' }
+        };
+
+        function runCheck() {
+            try {
+                const txt = $('qr').value.trim();
+                if (!txt && !$('pn').value.trim()) {
+                    $('out').innerHTML = '<div class="res wn"><div class="big">Nothing to check</div><p>Scan or paste a code first.</p></div>';
+                    return;
+                }
+                const R = verify(txt, { scr: $('scr').value, seal: $('seal').value, sell: sellerRisk(), bagProduct: $('pn').value.trim() });
+                if (R.other) { showOther2(R.other, txt); return; }
+                let dec = 'CARE', note = ''; const p = R.pack;
+                if (R.hard || R.verdict === 'SUSPICIOUS' || R.expired) dec = 'NO';
+                else if (R.verdict === 'CONSISTENT') { dec = 'YES' }
+                if (dec !== 'NO' && p) {
+                    if (p.t === 'F') {
+                        const v = ['ph', 'n', 'pp', 'k'].map(i => parseFloat($(i).value));
+                        if (v.some(isNaN)) { note = v.every(isNaN) ? 'Soil suitability was not checked. Add your soil test values (optional) to see if this fertiliser suits your soil.' : 'Soil suitability was not checked because some soil values are missing. Fill all four to check it.' }
+                        else {
+                            const rec = predictFert(...v);
+                            if (rec === p.s) note = 'Your soil values point to ' + rec + ', which matches this pack.';
+                            else { dec = 'CARE'; note = 'Your soil values point to ' + rec + ', but this pack is ' + p.s + '. The code is fine; it may not be the best choice for your soil. Ask your agriculture officer.' }
+                        }
+                    } else {
+                        note = 'The code checks out, but this tool cannot tell if this pesticide is right for your pest or crop. Follow the label dose and ask your extension officer.';
+                    }
+                }
+                const cls = { YES: 'ok', CARE: 'wn', NO: 'bd' }[dec], L = $('lang').value;
+                $('out').innerHTML = '<div class="res ' + cls + '"><div class="big">' + ({ YES: '✓ Can use', CARE: '! Use with care', NO: '✕ Do not use' })[dec] + '</div><p lang="' + L + '" style="font-size:1.05rem;margin:6px 0"></p><p class="mu" id="pk"></p><p id="nt"></p><div class="mu">Check: ' + R.verdict.replace('_', ' ') + ' · risk ' + R.risk + '/100</div><ul id="fl"></ul></div>';
+                $('out').querySelector('p[lang]').textContent = T[dec][L];
+                if (p) $('pk').textContent = (p.t === 'F' ? 'Fertiliser: ' : 'Pesticide: ') + p.s + ' · manufacturer ' + p.m + ' · batch ' + p.b + ' · serial ' + p.n + ' · expiry ' + (p.x || 'n/a');
+                $('nt').textContent = note;
+                R.flags.concat(R.steps.map(s => (s[0] ? '✓ ' : '– ') + s[1])).forEach(f => { const li = document.createElement('li'); li.textContent = f; $('fl').appendChild(li) });
+                $('out').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (err) {
+                console.error(err);
+                $('out').innerHTML = '<div class="res bd" role="alert"><div class="big">✕ Do not use</div><p>This code could not be read safely. Keep the bag and report it.</p></div>';
+                $('out').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        $('chk').onclick = runCheck;
+
+        ['scr', 'seal', 'pn', 'lang', 'ph', 'n', 'pp', 'k', 'sr', 'sv', 'se', 'sc', 'sp', 'sb'].forEach(id => {
+            const el = $(id);
+            if (el) {
+                el.addEventListener('input', () => { if ($('out').innerHTML.trim()) { $('out').innerHTML = '' } });
+                el.addEventListener('change', () => { if ($('out').innerHTML.trim()) { $('out').innerHTML = '' } });
+            }
+        });
+
+        /* issuer */
+        FERT.forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = 'Fertiliser: ' + f; $('ptype').appendChild(o) });
+        const po = document.createElement('option'); po.value = 'PEST'; po.textContent = 'Pesticide'; $('ptype').appendChild(po);
+        $('ex').value = new Date(Date.now() + 730 * 864e5).toISOString().slice(0, 10);
+
+        function mfId() {
+            const id = $('mid').value.trim() || 'MFR-01';
+            if (!/^[A-Za-z0-9_-]{1,32}$/.test(id) || id === '__proto__') {
+                alert('Manufacturer ID: letters, digits, - and _ only (max 32).'); return null;
+            }
+            return id;
+        }
+        function mfKey(id) {
+            let k = has(KEYS, id) ? KEYS[id] : null;
+            if (!k || !k.pub || !k.sec) {
+                const kp = nacl.sign.keyPair();
+                k = KEYS[id] = { pub: hex(kp.publicKey), sec: hex(kp.secretKey) };
+                st.set('kv_keys', KEYS);
+            }
+            return k;
+        }
+        $('mkpub').onclick = () => {
+            const id = mfId(); if (!id) return;
+            const k = mfKey(id), o = $('mkpubout');
+            o.value = 'Manufacturer ID: ' + id + '\nName: ' + ($('mname').value || id) + '\nPublic key: ' + k.pub;
+            o.hidden = false;
+            $('mkmsg').textContent = 'Send these three lines to the registry authority. Never share the private key; it stays on this device.';
+        };
+        $('mk').onclick = () => {
+            const id = mfId(); if (!id) return;
+            const k = mfKey(id);
+            const t = $('ptype').value, isP = t === 'PEST', nm = isP ? ($('pname').value || 'Pesticide') : t;
+            $('qrs').innerHTML = '';
+            const n = Math.max(1, Math.min(12, +$('cnt').value || 1));
+            try {
+                for (let i = 0; i < n; i++) {
+                    const ser = (+$('s0').value || 1) + i, unit = id + ':' + $('bt').value + ':' + ser;
+                    const scr = [...crypto.getRandomValues(new Uint8Array(5))].map(x => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[x % 31]).join('') +
+                        [...crypto.getRandomValues(new Uint8Array(5))].map(x => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[x % 31]).join('');
+                    const pl = { v: 1, m: id, t: isP ? 'P' : 'F', s: nm, b: $('bt').value, n: ser, x: $('ex').value, h: sh(unit, scr) };
+                    const pb = enc(JSON.stringify(pl)), code = b64e(pb) + '.' + b64e(nacl.sign.detached(pb, unhex(k.sec)));
+                    const q = qrcode(0, 'M'); q.addData(code); q.make();
+                    const d = document.createElement('div'); d.className = 'qc'; d.innerHTML = q.createSvgTag(4, 0);
+                    const svg = d.querySelector('svg'); if (svg) { svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', 'QR code for ' + nm + ' batch ' + $('bt').value + ' serial #' + ser) }
+                    d.insertAdjacentHTML('beforeend', '<div><b></b><br>Scratch code: <code></code></div>');
+                    d.querySelector('b').textContent = nm + ' · ' + $('bt').value + ' #' + ser;
+                    d.querySelector('code').textContent = scr;
+                    d.dataset.code = code;
+                    $('qrs').appendChild(d);
+                }
+                const rg = has(REG.mf, id) ? REG.mf[id] : null;
+                $('mkmsg').textContent = rg && rg.pub === k.pub && !rg.revoked ? 'This manufacturer is approved in the registry on this device, so these codes will verify here.' : 'Not approved yet: phones will show these codes as not trusted until the authority approves this manufacturer. Press "Show my public key" and send it to the authority.';
+            } catch (err) {
+                console.error(err);
+                $('qrs').innerHTML = '<p class="mu" style="color:var(--bd)">Could not generate QR codes: ' + (err.message || 'Input too large or overflow') + '. Try shorter names or fewer characters.</p>';
+            }
+        };
+
+        /* registry */
+        function renderReg(keepText) {
+            if (!keepText) $('regj').value = BUNDLE;
+            const n = Object.keys(REG.mf).length;
+            $('regst').textContent = !AUTH ? 'No authority is set up on this device yet. Until a signed registry from the authority is loaded, no manufacturer code can be trusted.'
+                : !BUNDLE ? 'Trusted authority fingerprint: ' + fp(AUTH) + '. No registry loaded yet.'
+                : '✓ Signed by the authority (fingerprint ' + fp(AUTH) + ') · version ' + REG.seq + ' · ' + n + ' manufacturer(s) · ' + REG.recalled.length + ' recalled batch(es)';
+            const ul = $('mflist'); ul.innerHTML = '';
+            Object.keys(REG.mf).forEach(id => { const m = REG.mf[id], li = document.createElement('li'); li.textContent = (m.name || id) + ' · ' + id + ' · key ' + fp(m.pub) + (m.revoked ? ' · REVOKED' : ''); ul.appendChild(li) });
+            REG.recalled.forEach(r => { const li = document.createElement('li'); li.textContent = 'Recalled batch: ' + r; ul.appendChild(li) });
+            $('atools').hidden = !SECRET;
+            $('aopen').hidden = !!SECRET;
+        }
+        function publish(change) {
+            if (!SECRET) throw new Error('Unlock the authority tools first.');
+            const d = { seq: REG.seq + 1, mf: JSON.parse(JSON.stringify(REG.mf)), recalled: REG.recalled.slice() };
+            change(d);
+            const pl = { v: 1, seq: d.seq, auth: AUTH, issued: localISODate(), mf: d.mf, recalled: d.recalled };
+            const pb = enc(JSON.stringify(pl));
+            BUNDLE = b64e(pb) + '.' + b64e(nacl.sign.detached(pb, SECRET));
+            REG = cleanReg(pl); st.set('kv_sreg', BUNDLE);
+            renderReg();
+        }
+        const idOk = v => /^[A-Za-z0-9_-]{1,32}$/.test(v) && v !== '__proto__';
+        const act = f => {
+            try { f(); $('astat').textContent = 'Done. The registry is now version ' + REG.seq + '. Copy the signed registry from the box above and send it to the other phones.' }
+            catch (e) { $('astat').textContent = e.message || 'Could not do that.' }
+        };
+
+        $('regl').onclick = () => { const r = loadBundle($('regj').value); $('regm').textContent = r.msg; renderReg(!r.ok) };
+
+        $('akey').onclick = () => {
+            if (AUTH_PUB_BUILTIN) { $('astat').textContent = 'This copy of the app already has an authority key built in.'; return }
+            if (AUTH && !confirm('This device already trusts an authority. A new key replaces it here, and phones that trust the old authority will reject registries signed with the new key. Continue?')) return;
+            const kp = nacl.sign.keyPair();
+            AUTH = hex(kp.publicKey); st.set('kv_auth', AUTH);
+            REG = { seq: 0, mf: {}, recalled: [] }; SECRET = kp.secretKey;
+            $('aseco').value = hex(kp.secretKey); $('asecbox').hidden = false;
+            publish(() => { });
+            $('astat').textContent = 'Authority created and unlocked. Save the private key now. Authority fingerprint: ' + fp(AUTH);
+        };
+        $('asecdone').onclick = () => { $('aseco').value = ''; $('asecbox').hidden = true };
+
+        $('aunlock').onclick = () => {
+            const h = $('asec').value.trim().toLowerCase();
+            try {
+                if (!/^[0-9a-f]{128}$/.test(h)) throw new Error('The private key is 128 characters (0-9 and a-f).');
+                const sec = unhex(h), pub = hex(sec.slice(32)), probe = enc('krishiverify');
+                if (!nacl.sign.detached.verify(probe, nacl.sign.detached(probe, sec), sec.slice(32))) throw new Error('That private key is not valid.');
+                if (AUTH && pub !== AUTH) throw new Error('This is not the authority key that this device trusts.');
+                if (!AUTH) {
+                    if (!confirm('This device will trust this key as the registry authority (fingerprint ' + fp(pub) + '). Continue?')) return;
+                    AUTH = pub; st.set('kv_auth', AUTH);
+                }
+                SECRET = sec; $('asec').value = '';
+                $('astat').textContent = 'Unlocked for this session. Closing or refreshing the page locks it again.';
+            } catch (e) { $('astat').textContent = e.message }
+            renderReg(true);
+        };
+        $('alock').onclick = () => { SECRET = null; $('astat').textContent = 'Locked.'; renderReg(true) };
+
+        $('aadd').onclick = () => act(() => {
+            const id = $('aid').value.trim(), name = $('aname').value.trim() || id, pub = $('apub').value.trim().toLowerCase();
+            if (!idOk(id)) throw new Error('Manufacturer ID: letters, digits, - and _ only (max 32).');
+            if (!HEX64.test(pub)) throw new Error('The public key must be 64 characters (0-9 and a-f).');
+            if (has(REG.mf, id) && REG.mf[id].pub !== pub && !confirm('Manufacturer ' + id + ' already has a different key. Replace it?')) throw new Error('Cancelled. Nothing was changed.');
+            publish(d => { d.mf[id] = { name, pub, revoked: false } });
+            $('aid').value = ''; $('aname').value = ''; $('apub').value = '';
+        });
+        $('arev').onclick = () => act(() => {
+            const id = $('rid').value.trim();
+            if (!has(REG.mf, id)) throw new Error('No manufacturer with that ID is in the registry.');
+            if (!confirm('Revoke ' + id + '? Every pack signed by this manufacturer will show as invalid.')) throw new Error('Cancelled. Nothing was changed.');
+            publish(d => { d.mf[id].revoked = true });
+            $('rid').value = '';
+        });
+        $('arec').onclick = () => act(() => {
+            const b = $('rb').value.trim();
+            if (!/^[A-Za-z0-9_-]{1,32}:[^\s:]{1,40}$/.test(b)) throw new Error('Format: MANUFACTURERID:BATCH, for example MFR-01:B001');
+            if (REG.recalled.includes(b)) throw new Error('That batch is already recalled.');
+            publish(d => { d.recalled.push(b) });
+            $('rb').value = '';
+        });
+
+        $('regx').onclick = () => {
+            if (confirm('Are you sure you want to clear your local scan history?')) {
+                HIST = {}; st.set('kv_hist', HIST); lastCheckedCode = ''; $('regm').textContent = 'Scan history cleared.';
+            }
+        };
+        renderReg();
+    </script>
+</body>
+
+</html>
